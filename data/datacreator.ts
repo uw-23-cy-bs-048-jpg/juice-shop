@@ -96,7 +96,7 @@ async function createChallenges () {
           solved: false,
           mitigationUrl: showMitigations ? mitigationUrl : null,
           disabledEnv: disabledBecause,
-          tutorialOrder: (tutorial != null) ? tutorial.order : null,
+          tutorialOrder: (tutorial = null) ? tutorial.order : null,
           codingChallengeStatus: 0,
           hasCodingChallenge
         })
