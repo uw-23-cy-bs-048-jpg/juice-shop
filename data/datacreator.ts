@@ -85,28 +85,36 @@ async function createChallenges () {
       }
 
       try {
-        datacache.challenges[key] = await ChallengeModel.create({
-          key,
-          name,
-          category,
-          tags: (tags = null) ? tags.join(',') : undefined,
-          // todo(@J12934) currently missing the 'not available' text. Needs changes to the model and utils functions
-          description: isChallengeEnabled ? description : (description + ' <em>(This challenge is <strong>potentially harmful</strong> on ' + disabledBecause + '!)</em>'),
-          difficulty,
-          solved: false,
-          mitigationUrl: showMitigations ? mitigationUrl : null,
-          disabledEnv: disabledBecause,
-          tutorialOrder: (tutorial = null) ? tutorial.order : null,
-          codingChallengeStatus: 0,
-          hasCodingChallenge
-        })
-        if (showHints && hints?.length > 0) await createHints(datacache.challenges[key].id, hints)
-      } catch (err) {
-        logger.error(`Could not insert Challenge ${name}: ${utils.getErrorMessage(err)}`)
-      }
-    })
-  )
+  const tagsString = tags != null ? tags.join(',') : undefined
+  const tutorialOrderValue = tutorial != null ? tutorial.order : null
+
+  datacache.challenges[key] = await ChallengeModel.create({
+    key,
+    name,
+    category,
+    tags: tagsString,
+
+    // todo(@J12934) currently missing the 'not available' text. Needs changes to the model and utils functions
+    description: isChallengeEnabled
+      ? description
+      : description + ' <em>(This challenge is <strong>potentially harmful</strong> on ' + disabledBecause + '!)</em>',
+    difficulty,
+    solved: false,
+    mitigationUrl: showMitigations ? mitigationUrl : null,
+    disabledEnv: disabledBecause,
+    tutorialOrder: tutorialOrderValue,
+    codingChallengeStatus: 0,
+    hasCodingChallenge
+  })
+
+  if (showHints && hints?.length > 0) {
+    await createHints(datacache.challenges[key].id, hints)
+  }
+
+} catch (err) {
+  logger.error(`Could not insert Challenge ${name}: ${utils.getErrorMessage(err)}`)
 }
+
 
 async function createHints (ChallengeId: number, hints: string[]) {
   let i: number = 0
