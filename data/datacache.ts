@@ -29,8 +29,10 @@ export interface Notification {
   isRestore: boolean
 }
 export const notifications: Notification[] = []
+export function setRetrieveBlueprintChallengeFile(retrieveBlueprintChallengeFileArg: string) {
+  retrieveBlueprintChallengeFile = retrieveBlueprintChallengeFileArg
+}
 
-export let retrieveBlueprintChallengeFile: string | null = null
 export function setRetrieveBlueprintChallengeFile (retrieveBlueprintChallengeFileArg: string) {
   retrieveBlueprintChallengeFile = retrieveBlueprintChallengeFileArg
 }
